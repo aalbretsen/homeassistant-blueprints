@@ -8,9 +8,7 @@ Friends of Hue switch to turn on, off and dim a [WLED](https://www.home-assistan
 [![Imort this blueprint to your Home Assistant instance.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Faalbretsen%2Fhomeassistant-blueprints%2Fmain%2Fdeconz_wled_dimmer.yaml)
 
 ## Outdoor light automation
-[[outdoor_light.yaml](outdoor_light.yaml)]
-
-Blueprint which reacts to HomeAssistant sun events and triggers given scenes for outdoor light on and off. 
+[[outdoor_light.yaml](outdoor_light.yaml)] Blueprint which reacts to HomeAssistant sun events and triggers given scenes for outdoor light on and off. 
 Will continuously trigger the scenes to counter for power outage or similar events preventing sun events to trigger the automation.
 
 [![Imort this blueprint to your Home Assistant instance.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Faalbretsen%2Fhomeassistant-blueprints%2Fmain%2Foutdoor_light.yaml)
