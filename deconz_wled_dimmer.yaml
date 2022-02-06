@@ -1,6 +1,6 @@
 blueprint:
-  name: Phoscon switch as dimmer
-  description: Use a Deconz switch as general purpos dimmer for any light
+  name: Deconz switch as dimmer
+  description: Use a Deconz switch as general purpos dimmer for WLED light strips
   domain: automation
   input:
     deconz_switch:
@@ -20,14 +20,14 @@ blueprint:
             - 'Right'
     wled_light:
       name: Light
-      description: Light to control from selected switch
+      description: WLED light strip (segment) to control
       selector:
         entity:
           integration: wled
           domain: light
     step_delay:
       name: Transition step lenght
-      description: Length of each transition step in milliseconds
+      description: Length of each transition step in milliseconds (dim speed)
       default: 100
       selector:
         number:
