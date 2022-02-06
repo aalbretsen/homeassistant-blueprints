@@ -1,6 +1,6 @@
-# HomeAssistant Blueprint Collection
+# Home Assistant Blueprint Collection
 
-## Deconz switch as dimmer for WLED strips
+## Deconz switch as dimmer for WLED strip
 [[deconz_wled_dimmer.yaml](deconz_wled_dimmer.yaml)]
 Blueprint which enables a [Deconz](https://www.home-assistant.io/integrations/deconz/) 
 Friends of Hue switch to turn on, off and dim a [WLED](https://www.home-assistant.io/integrations/wled/) strip segment.
