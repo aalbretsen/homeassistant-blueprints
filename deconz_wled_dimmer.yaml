@@ -1,6 +1,6 @@
 blueprint:
-  name: Deconz switch as dimmer
-  description: Use a Deconz switch as general purpos dimmer for WLED light strips
+  name: Deconz switch as dimmer for WLED strip
+  description: Use a Deconz switch as general purpos dimmer for a WLED light strip (segment)
   domain: automation
   input:
     deconz_switch:
@@ -19,7 +19,7 @@ blueprint:
             - 'Left (or single)'
             - 'Right'
     wled_light:
-      name: Light
+      name: Light strip
       description: WLED light strip (segment) to control
       selector:
         entity:
