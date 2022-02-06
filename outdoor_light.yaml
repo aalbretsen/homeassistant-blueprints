@@ -1,0 +1,42 @@
+blueprint:
+  name: Outdoor light control
+  description: >- 
+    Execute actions on sunset and sunrise.
+    Will also execute actions with 30 minutes interval to counter for power
+    outage or similar events preventing sun events to trigger the automation.
+  domain: automation
+  input:
+    light_on_action:
+      name: Turn light on action
+      description: Configure action to execute at night (sunset)
+      selector:
+        action:
+    light_off_action:
+      name: Turn light off action
+      description: Configure action to execute at daylight (sunrise)
+      selector:
+        action:
+        
+mode: single
+condition: []
+
+trigger:
+  - platform: sun
+    event: sunrise
+    offset: '0'
+  - platform: sun
+    event: sunset
+    offset: '0'
+  - platform: time_pattern
+    minutes: '15'
+  - platform: time_pattern
+    minutes: '45'
+    
+action:
+  - choose:
+      - conditions:
+          - condition: sun
+            after: sunrise
+            before: sunset
+        sequence: !input light_off_action
+    default: !input light_on_action
