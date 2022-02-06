@@ -1,0 +1,275 @@
+blueprint:
+  name: Phoscon switch as dimmer
+  description: Use a Deconz switch as general purpos dimmer for any light
+  domain: automation
+  input:
+    deconz_switch:
+      name: Deconz Switch
+      description: Dimmer source
+      selector:
+        device:
+          integration: deconz
+    deconz_button:
+      name: Deconz button
+      description: Which button for the selected switch
+      default: 'Left (or single)'
+      selector:
+        select:
+          options:
+            - 'Left (or single)'
+            - 'Right'
+    wled_light:
+      name: Light
+      description: Light to control from selected switch
+      selector:
+        entity:
+          integration: wled
+          domain: light
+    step_delay:
+      name: Transition step lenght
+      description: Length of each transition step in milliseconds
+      default: 100
+      selector:
+        number:
+          min: 10
+          max: 250
+          step: 10
+          unit_of_measurement: ms
+
+mode: restart
+
+variables:
+  deconz_button: !input deconz_button
+  wled_light: !input wled_light
+  dim_values:
+    [ 1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,22,24,26,28,30,34,38,42,46,50,54,58,62,66,70,78,86,94,100,108,116,124,130,144,160,176,192,208,224,240,250 ]
+  brightness_value: |
+    {{ state_attr(wled_light, 'brightness') | int }}
+  dim_values_up: |
+    {{ dim_values | select("greaterthan", brightness_value) | list }}
+  dim_values_down: |
+    {{ dim_values[::-1] | select("lessthan", brightness_value) | list }}
+
+trigger:
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_short_release
+    subtype: button_1
+    id: turnOnLeft
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_press
+    subtype: button_1
+    id: dimUpStartLeft
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_release
+    subtype: button_1
+    id: dimUpStopLeft
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_short_release
+    subtype: button_2
+    id: turnOffLeft
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_press
+    subtype: button_2
+    id: dimDownStartLeft
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_release
+    subtype: button_2
+    id: dimDownStopLeft
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_short_release
+    subtype: button_3
+    id: turnOnRight
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_press
+    subtype: button_3
+    id: dimUpStartRight
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_release
+    subtype: button_3
+    id: dimUpStopRight
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_short_release
+    subtype: button_4
+    id: turnOffRight
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_press
+    subtype: button_4
+    id: dimDownStartRight
+  - device_id: !input deconz_switch
+    domain: deconz
+    platform: device
+    type: remote_button_long_release
+    subtype: button_4
+    id: dimDownStopRight
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: turnOnLeft
+          - condition: template
+            value_template: |
+              {{ deconz_button != 'Right' }}
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: !input 'wled_light'
+
+      - conditions:
+          - condition: trigger
+            id: turnOnRight
+          - condition: template
+            value_template: |
+              {{ deconz_button == 'Right' }}
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: !input 'wled_light'
+
+      - conditions:
+          - condition: trigger
+            id: turnOffLeft
+          - condition: template
+            value_template: |
+              {{ deconz_button != 'Right' }}  
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id: !input 'wled_light'
+
+      - conditions:
+          - condition: trigger
+            id: turnOffRight
+          - condition: template
+            value_template: |
+              {{ deconz_button == 'Right' }}  
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id: !input 'wled_light'
+
+      - conditions:
+          - condition: trigger
+            id: dimUpStartLeft
+          - condition: template
+            value_template: |
+              {{ deconz_button != 'Right' }}  
+          - condition: state
+            entity_id: !input 'wled_light'
+            state: 'on'
+        sequence:
+          - repeat:
+              while:
+                - condition: template
+                  value_template: '{{ repeat.index <= (dim_values_up | length) }}'
+              sequence:
+                - service: light.turn_on
+                  target:
+                    entity_id: !input 'wled_light'
+                  data:
+                    brightness: '{{ dim_values_up[repeat.index - 1] }}'
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 0
+                    milliseconds: !input step_delay
+
+      - conditions:
+          - condition: trigger
+            id: dimUpStartRight
+          - condition: template
+            value_template: |
+              {{ deconz_button == 'Right' }}  
+          - condition: state
+            entity_id: !input 'wled_light'
+            state: 'on'
+        sequence:
+          - repeat:
+              while:
+                - condition: template
+                  value_template: '{{ repeat.index <= (dim_values_up | length) }}'
+              sequence:
+                - service: light.turn_on
+                  target:
+                    entity_id: !input 'wled_light'
+                  data:
+                    brightness: '{{ dim_values_up[repeat.index - 1] }}'
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 0
+                    milliseconds: !input step_delay
+
+      - conditions:
+          - condition: trigger
+            id: dimDownStartLeft
+          - condition: template
+            value_template: |
+              {{ deconz_button != 'Right' }}  
+          - condition: state
+            entity_id: !input 'wled_light'
+            state: 'on'
+        sequence:
+          - repeat:
+              while:
+                - condition: template
+                  value_template: '{{ repeat.index <= (dim_values_down | length) }}'
+              sequence:
+                - service: light.turn_on
+                  target:
+                    entity_id: !input 'wled_light'
+                  data:
+                    brightness: '{{ dim_values_down[repeat.index - 1] }}'
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 0
+                    milliseconds: !input step_delay
+
+      - conditions:
+          - condition: trigger
+            id: dimDownStartRight
+          - condition: template
+            value_template: |
+              {{ deconz_button == 'Right' }}  
+          - condition: state
+            entity_id: !input 'wled_light'
+            state: 'on'
+        sequence:
+          - repeat:
+              while:
+                - condition: template
+                  value_template: '{{ repeat.index <= (dim_values_down | length) }}'
+              sequence:
+                - service: light.turn_on
+                  target:
+                    entity_id: !input 'wled_light'
+                  data:
+                    brightness: '{{ dim_values_down[repeat.index - 1] }}'
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 0
+                    milliseconds: !input step_delay
