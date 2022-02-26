@@ -1,0 +1,128 @@
+blueprint:
+  name: Light Control - Motion and door sensor
+  domain: automation
+  description: >-
+    Blueprint for motion and door sensor controlled light.
+    <br /> - Restarts timer each time motion is detected.
+    <br /> - (Re)starts timer if light is manually turned on (or turned on by other source).
+    <br /> - Resets when light is manually turned off (or turned off by other source).
+    <br /> - Configurable if light shall be turned off when the door is closed.
+    <br /> - Support for blocking value (block at night).
+  input:
+    light:
+      name: Light to monitor state
+      description: Select the light (or one of the lights) which the automation will use to monitor the current state
+      selector:
+        entity:
+          domain: light
+    motion_sensor:
+      name: Motion sensor
+      description: Sensor detecting motion to trigger light on
+      selector:
+        entity: {}
+    door_sensor:
+      name: Door sensor
+      description: Sensor detecting door to trigger light on
+      selector:
+        entity: {}
+    delay:
+      name: Turn off light delay
+      description: Time in minutes to wait before turning off light
+      default: 15
+      selector:
+        number:
+          min: 1
+          max: 60
+          step: 1
+          unit_of_measurement: minutes
+    door_turn_off_light:
+      name: Turn off light when door is closed
+      description: Default is true (activated). Disable if you don't want closed events from the door to turn off light.
+      default: true
+      selector:
+        boolean: {}
+    blocker:
+      name: Block motion and door sensor
+      description: Optional binary value which will turn off detection when activated (on).
+      default: 'none'
+      selector:
+        entity: {}
+    on_action:
+      name: Action for light ON
+      description: Define the actions to be executed when it's time to turn the light on.
+      selector:
+        action: {}
+    off_action:
+      name: Action for light OFF
+      description: Define the actions to be executed when it's time to turn the light off.
+      selector:
+        action: {}
+
+mode: restart
+condition: []
+
+trigger:
+  - platform: state
+    entity_id: !input motion_sensor
+    id: motion
+    to: 'on'
+  - platform: state
+    entity_id: !input door_sensor
+    id: door_opened
+    to: 'on'
+  - platform: state
+    entity_id: !input door_sensor
+    id: door_closed
+    to: 'off'
+  - platform: state
+    entity_id: !input light
+    id: light_off
+    to: 'off'
+  - platform: state
+    entity_id: !input light
+    id: light_on
+    to: 'on'
+
+variables:
+  blocker: !input blocker
+  door_turn_off_light: !input door_turn_off_light
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: light_off
+        sequence: []
+      - conditions:
+          - condition: trigger
+            id: door_closed
+          - >-
+            {{ door_turn_off_light }}
+        sequence: !input off_action
+      - conditions:
+          - >-
+            {{ not (trigger.id in ('motion', 'door_open') and states(blocker) == 'on') }}
+          - condition: state
+            entity_id: !input light
+            state: 'off'
+        sequence:
+          - choose:
+            - conditions: >-
+                {{ 'this is a trick' == 'to execute a sublist of actions' }}
+              sequence: []
+            default: !input on_action
+          - delay:
+              minutes: !input delay    
+          - choose:
+            - conditions: >-
+                {{ 'this is a trick' == 'to execute a sublist of actions' }}
+              sequence: []
+            default: !input off_action
+    default:
+      - delay:
+          minutes: !input delay    
+      - choose:
+        - conditions: >-
+            {{ 'this is a trick' == 'to execute a sublist of actions' }}
+          sequence: []
+        default: !input off_action
