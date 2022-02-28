@@ -18,7 +18,6 @@ Will continuously trigger the scenes to counter for power outage or similar even
 - Restarts timer each time motion is detected.
 - (Re)starts timer if light is manually turned on (or turned on by other source).
 - Resets when light is manually turned off (or turned off by other source).
-- Configurable if light shall be turned off when the door is closed.
 - Support for blocking value (block at night).
 
 [![Imort this blueprint to your Home Assistant instance.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Faalbretsen%2Fhomeassistant-blueprints%2Fmain%2Flight_control__motion.yaml)
@@ -28,6 +27,23 @@ Will continuously trigger the scenes to counter for power outage or similar even
 - Restarts timer each time motion is detected.
 - (Re)starts timer if light is manually turned on (or turned on by other source).
 - Resets when light is manually turned off (or turned off by other source).
+- Configurable if light shall be turned off when the door is closed.
 - Support for blocking value (block at night).
 
 [![Imort this blueprint to your Home Assistant instance.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Faalbretsen%2Fhomeassistant-blueprints%2Fmain%2Flight_control__motion_and_door.yaml)
+
+## Light Control - Time of day
+[[light_control__time_of_day.yaml](light_control__time_of_day.yaml)] Blueprint for time based light control.
+- Up to 8 different time settings.
+- Up to 4 override settings.
+
+[![Imort this blueprint to your Home Assistant instance.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Faalbretsen%2Fhomeassistant-blueprints%2Fmain%2Flight_control__time_of_day.yaml)
+
+## Light Control - Motion based time of day
+[[light_control__time_of_day_and_motion.yaml](light_control__time_of_day_and_motion.yaml)] Blueprint for motion and time based light control.
+- Restarts timer each time motion is detected.
+- (Re)starts timer if light is manually turned on (or turned on by other source).
+- Resets when light is manually turned off (or turned off by other source).
+- Up to 8 different time settings.
+
+[![Imort this blueprint to your Home Assistant instance.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Faalbretsen%2Fhomeassistant-blueprints%2Fmain%2Flight_control__time_of_day_and_motion.yaml)

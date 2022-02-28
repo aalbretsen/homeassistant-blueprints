@@ -1,0 +1,332 @@
+blueprint:
+  name: Light Control - Motion based time of day
+  domain: automation
+  description: >-
+    Blueprint for motion and time based light control.
+    <br /> - Restarts timer each time motion is detected.
+    <br /> - (Re)starts timer if light is manually turned on (or turned on by other source).
+    <br /> - Resets when light is manually turned off (or turned off by other source).
+    <br /> - Up to 8 different time settings.
+    <br />
+    When time of day is the same as, or after, a given time the corresponding action will be executed.
+    It is not necessary to use all 8 time definition for this blueprint to work, but you have to:
+    <br /> - Use them in order, no unused or empty time configurations in between two that you want to use.
+    <br /> - Times have to be defined in chronological order, starting with the first time of the day, then the next.
+    <br />
+    Example:
+    <br /> If time1 is defined as 08:00:00, time2 is defined as 20:00:00 and the starting date is 2020-01-01
+    <br /> - action1 will be executed between 2020-01-01 08:00:00 and 2020-01-01 19:59:59
+    <br /> - action2 will be executed between 2020-01-01 20:00:00 and 2020-01-02 07:59:59
+    <br /> - action1 will be executed between 2020-01-02 08:00:00 and 2020-01-02 19:59:59
+    <br /> - action2 will be executed between 2020-01-02 20:00:00 and 2020-01-03 07:59:59
+    <br /> - action1 will be executed between 2020-01-03 08:00:00 and 2020-01-03 19:59:59
+    <br /> - and so on
+    <br />
+    The override actions are evaluated in chronological prioritized order, meaning that override 1 will take
+    precedence over override 2, and so on. The overrides can be used to define actions that shall be executed in stead
+    of the action define for the current time of day.
+  input:
+    light:
+      name: Light to monitor state
+      description: Select the light (or one of the lights) which the automation will use to monitor the current state
+      selector:
+        entity:
+          domain: light
+    motion_sensor:
+      name: Motion sensor
+      description: Sensor detecting motion to trigger light on
+      selector:
+        entity: {}
+    delay:
+      name: Turn off light delay
+      description: Time in minutes to wait before turning off light
+      default: 15
+      selector:
+        number:
+          min: 1
+          max: 59
+          step: 1
+          unit_of_measurement: minutes
+
+    time1:
+      name: 'Time #1'
+      description: 'From when to start sending action defined in `Action #1`'
+      selector:
+        time: { }
+      default:
+    time2:
+      name: 'Time #2'
+      description: 'From when to start sending action defined in `Action #2`'
+      selector:
+        time: { }
+      default:
+    time3:
+      name: 'Time #3'
+      description: 'From when to start sending action defined in `Action #3`'
+      selector:
+        time: { }
+      default:
+    time4:
+      name: 'Time #4'
+      description: 'From when to start sending action defined in `Action #4`'
+      selector:
+        time: { }
+      default:
+    time5:
+      name: 'Time #5'
+      description: 'From when to start sending action defined in `Action #5`'
+      selector:
+        time: { }
+      default:
+    time6:
+      name: 'Time #6'
+      description: 'From when to start sending action defined in `Action #6`'
+      selector:
+        time: { }
+      default:
+    time7:
+      name: 'Time #7'
+      description: 'From when to start sending action defined in `Action #7`'
+      selector:
+        time: { }
+      default:
+    time8:
+      name: 'Time #8'
+      description: 'From when to start sending action defined in `Action #8`'
+      selector:
+        time: { }
+      default:
+
+    overrideEntity1:
+      name: 'Optional binary override entity #1'
+      description: 'If defined, will execute override action #1 when this binary value is activated (on).'
+      default: 'none'
+      selector:
+        entity: { }
+    overrideEntity2:
+      name: 'Optional binary override entity #2'
+      description: 'If defined, will execute override action #2 when this binary value is activated (on).'
+      default: 'none'
+      selector:
+        entity: { }
+    overrideEntity3:
+      name: 'Optional binary override entity #3'
+      description: 'If defined, will execute override action #3 when this binary value is activated (on).'
+      default: 'none'
+      selector:
+        entity: { }
+    overrideEntity4:
+      name: 'Optional binary override entity #4'
+      description: 'If defined, will execute override action #4 when this binary value is activated (on).'
+      default: 'none'
+      selector:
+        entity: { }
+
+    action1:
+      name: 'Light ON action for time #1'
+      description: 'Define the actions to be executed for time config #1 (has no effect if time config #1 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action2:
+      name: 'Light ON action for time #2'
+      description: 'Define the actions to be executed for time config #2 (has no effect if time config #2 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action3:
+      name: 'Light ON action for time #3'
+      description: 'Define the actions to be executed for time config #3 (has no effect if time config #3 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action4:
+      name: 'Light ON action for time #4'
+      description: 'Define the actions to be executed for time config #4 (has no effect if time config #4 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action5:
+      name: 'Light ON action for time #5'
+      description: 'Define the actions to be executed for time config #5 (has no effect if time config #5 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action6:
+      name: 'Light ON action for time #6'
+      description: 'Define the actions to be executed for time config #6 (has no effect if time config #6 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action7:
+      name: 'Light ON action for time #7'
+      description: 'Define the actions to be executed for time config #7 (has no effect if time config #7 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+    action8:
+      name: 'Light ON action for time #8'
+      description: 'Define the actions to be executed for time config #8 (has no effect if time config #8 is not defined).'
+      selector:
+        action: { }
+      default: [ ]
+
+    overrideAction1:
+      name: 'Light ON action for override #1'
+      description: 'Define the actions to be executed when the binary override entity #1 is active.'
+      selector:
+        action: { }
+      default: [ ]
+    overrideAction2:
+      name: 'Light ON action for override #2'
+      description: 'Define the actions to be executed when the binary override entity #2 is active.'
+      selector:
+        action: { }
+      default: [ ]
+    overrideAction3:
+      name: 'Light ON action for override #3'
+      description: 'Define the actions to be executed when the binary override entity #3 is active.'
+      selector:
+        action: { }
+      default: [ ]
+    overrideAction4:
+      name: 'Light ON action for override #4'
+      description: 'Define the actions to be executed when the binary override entity #4 is active.'
+      selector:
+        action: { }
+      default: [ ]
+
+    actionOff:
+      name: 'Light OFF action'
+      description: Define the actions to be executed when it's time to turn the light off.
+      selector:
+        action: { }
+      default: [ ]
+
+mode: restart
+condition: [ ]
+
+trigger:
+  - platform: state
+    entity_id: !input motion_sensor
+    id: motion
+    to: 'on'
+  - platform: state
+    entity_id: !input light
+    id: light_off
+    to: 'off'
+  - platform: state
+    entity_id: !input light
+    id: light_on
+    to: 'on'
+
+variables:
+  timeNow: "{{ now().strftime('%T') }}"
+  time1: !input time1
+  time2: !input time2
+  time3: !input time3
+  time4: !input time4
+  time5: !input time5
+  time6: !input time6
+  time7: !input time7
+  time8: !input time8
+  overrideEntity1: !input overrideEntity1
+  overrideEntity2: !input overrideEntity2
+  overrideEntity3: !input overrideEntity3
+  overrideEntity4: !input overrideEntity4
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: light_off
+        sequence: []
+      - conditions:
+          - condition: state
+            entity_id: !input light
+            state: 'off'
+        sequence:
+          - choose:
+              - conditions:
+                  - "{{ states(overrideEntity1) == 'on' }}"
+                sequence: !input overrideAction1
+              - conditions:
+                  - "{{ states(overrideEntity2) == 'on' }}"
+                sequence: !input overrideAction2
+              - conditions:
+                  - "{{ states(overrideEntity3) == 'on' }}"
+                sequence: !input overrideAction3
+              - conditions:
+                  - "{{ states(overrideEntity4) == 'on' }}"
+                sequence: !input overrideAction4
+              - conditions:
+                  - "{{ not ( not time8 ) }}"
+                  - "{{ timeNow >= time8 }}"
+                sequence: !input action8
+              - conditions:
+                  - "{{ not ( not time7 ) }}"
+                  - "{{ timeNow >= time7 }}"
+                sequence: !input action7
+              - conditions:
+                  - "{{ not ( not time6 ) }}"
+                  - "{{ timeNow >= time6 }}"
+                sequence: !input action6
+              - conditions:
+                  - "{{ not ( not time5 ) }}"
+                  - "{{ timeNow >= time5 }}"
+                sequence: !input action5
+              - conditions:
+                  - "{{ not ( not time4 ) }}"
+                  - "{{ timeNow >= time4 }}"
+                sequence: !input action4
+              - conditions:
+                  - "{{ not ( not time3 ) }}"
+                  - "{{ timeNow >= time3 }}"
+                sequence: !input action3
+              - conditions:
+                  - "{{ not ( not time2 ) }}"
+                  - "{{ timeNow >= time2 }}"
+                sequence: !input action2
+              - conditions:
+                  - "{{ not ( not time1 ) }}"
+                  - "{{ timeNow >= time1 }}"
+                sequence: !input action1
+            default:
+              - choose:
+                  - conditions:
+                      - "{{ not ( not time8 ) }}"
+                    sequence: !input action8
+                  - conditions:
+                      - "{{ not ( not time7 ) }}"
+                    sequence: !input action7
+                  - conditions:
+                      - "{{ not ( not time6 ) }}"
+                    sequence: !input action6
+                  - conditions:
+                      - "{{ not ( not time5 ) }}"
+                    sequence: !input action5
+                  - conditions:
+                      - "{{ not ( not time4 ) }}"
+                    sequence: !input action4
+                  - conditions:
+                      - "{{ not ( not time3 ) }}"
+                    sequence: !input action3
+                  - conditions:
+                      - "{{ not ( not time2 ) }}"
+                    sequence: !input action2
+                default: !input action1
+          - delay:
+              minutes: !input delay
+          - choose:
+              - conditions: >-
+                  {{ 'this is a trick' == 'to execute a sublist of actions' }}
+                sequence: []
+            default: !input actionOff
+    default:
+      - delay:
+          minutes: !input delay
+      - choose:
+          - conditions: >-
+              {{ 'this is a trick' == 'to execute a sublist of actions' }}
+            sequence: []
+        default: !input actionOff

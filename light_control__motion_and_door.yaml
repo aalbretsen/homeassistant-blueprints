@@ -32,7 +32,7 @@ blueprint:
       selector:
         number:
           min: 1
-          max: 60
+          max: 59
           step: 1
           unit_of_measurement: minutes
     door_turn_off_light:
@@ -59,7 +59,7 @@ blueprint:
         action: {}
 
 mode: restart
-condition: []
+condition: [ ]
 
 trigger:
   - platform: state
