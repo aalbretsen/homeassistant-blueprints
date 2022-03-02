@@ -36,7 +36,7 @@ blueprint:
       name: Motion sensor
       description: Sensor detecting motion to trigger light on
       selector:
-        entity: {}
+        entity: { }
     delay:
       name: Turn off light delay
       description: Time in minutes to wait before turning off light
@@ -210,15 +210,10 @@ trigger:
   - platform: state
     entity_id: !input motion_sensor
     id: motion
-    to: 'on'
   - platform: state
     entity_id: !input light
     id: light_off
     to: 'off'
-  - platform: state
-    entity_id: !input light
-    id: light_on
-    to: 'on'
 
 variables:
   timeNow: "{{ now().strftime('%T') }}"
@@ -240,93 +235,81 @@ action:
       - conditions:
           - condition: trigger
             id: light_off
-        sequence: []
-      - conditions:
-          - condition: state
-            entity_id: !input light
-            state: 'off'
-        sequence:
+        sequence: [ ]
+    default:
+      - choose:
+          - conditions:
+              - "{{ states(overrideEntity1) == 'on' }}"
+            sequence: !input overrideAction1
+          - conditions:
+              - "{{ states(overrideEntity2) == 'on' }}"
+            sequence: !input overrideAction2
+          - conditions:
+              - "{{ states(overrideEntity3) == 'on' }}"
+            sequence: !input overrideAction3
+          - conditions:
+              - "{{ states(overrideEntity4) == 'on' }}"
+            sequence: !input overrideAction4
+          - conditions:
+              - "{{ not ( not time8 ) }}"
+              - "{{ timeNow >= time8 }}"
+            sequence: !input action8
+          - conditions:
+              - "{{ not ( not time7 ) }}"
+              - "{{ timeNow >= time7 }}"
+            sequence: !input action7
+          - conditions:
+              - "{{ not ( not time6 ) }}"
+              - "{{ timeNow >= time6 }}"
+            sequence: !input action6
+          - conditions:
+              - "{{ not ( not time5 ) }}"
+              - "{{ timeNow >= time5 }}"
+            sequence: !input action5
+          - conditions:
+              - "{{ not ( not time4 ) }}"
+              - "{{ timeNow >= time4 }}"
+            sequence: !input action4
+          - conditions:
+              - "{{ not ( not time3 ) }}"
+              - "{{ timeNow >= time3 }}"
+            sequence: !input action3
+          - conditions:
+              - "{{ not ( not time2 ) }}"
+              - "{{ timeNow >= time2 }}"
+            sequence: !input action2
+          - conditions:
+              - "{{ not ( not time1 ) }}"
+              - "{{ timeNow >= time1 }}"
+            sequence: !input action1
+        default:
           - choose:
               - conditions:
-                  - "{{ states(overrideEntity1) == 'on' }}"
-                sequence: !input overrideAction1
-              - conditions:
-                  - "{{ states(overrideEntity2) == 'on' }}"
-                sequence: !input overrideAction2
-              - conditions:
-                  - "{{ states(overrideEntity3) == 'on' }}"
-                sequence: !input overrideAction3
-              - conditions:
-                  - "{{ states(overrideEntity4) == 'on' }}"
-                sequence: !input overrideAction4
-              - conditions:
                   - "{{ not ( not time8 ) }}"
-                  - "{{ timeNow >= time8 }}"
                 sequence: !input action8
               - conditions:
                   - "{{ not ( not time7 ) }}"
-                  - "{{ timeNow >= time7 }}"
                 sequence: !input action7
               - conditions:
                   - "{{ not ( not time6 ) }}"
-                  - "{{ timeNow >= time6 }}"
                 sequence: !input action6
               - conditions:
                   - "{{ not ( not time5 ) }}"
-                  - "{{ timeNow >= time5 }}"
                 sequence: !input action5
               - conditions:
                   - "{{ not ( not time4 ) }}"
-                  - "{{ timeNow >= time4 }}"
                 sequence: !input action4
               - conditions:
                   - "{{ not ( not time3 ) }}"
-                  - "{{ timeNow >= time3 }}"
                 sequence: !input action3
               - conditions:
                   - "{{ not ( not time2 ) }}"
-                  - "{{ timeNow >= time2 }}"
                 sequence: !input action2
-              - conditions:
-                  - "{{ not ( not time1 ) }}"
-                  - "{{ timeNow >= time1 }}"
-                sequence: !input action1
-            default:
-              - choose:
-                  - conditions:
-                      - "{{ not ( not time8 ) }}"
-                    sequence: !input action8
-                  - conditions:
-                      - "{{ not ( not time7 ) }}"
-                    sequence: !input action7
-                  - conditions:
-                      - "{{ not ( not time6 ) }}"
-                    sequence: !input action6
-                  - conditions:
-                      - "{{ not ( not time5 ) }}"
-                    sequence: !input action5
-                  - conditions:
-                      - "{{ not ( not time4 ) }}"
-                    sequence: !input action4
-                  - conditions:
-                      - "{{ not ( not time3 ) }}"
-                    sequence: !input action3
-                  - conditions:
-                      - "{{ not ( not time2 ) }}"
-                    sequence: !input action2
-                default: !input action1
-          - delay:
-              minutes: !input delay
-          - choose:
-              - conditions: >-
-                  {{ 'this is a trick' == 'to execute a sublist of actions' }}
-                sequence: []
-            default: !input actionOff
-    default:
+            default: !input action1
       - delay:
           minutes: !input delay
       - choose:
           - conditions: >-
               {{ 'this is a trick' == 'to execute a sublist of actions' }}
-            sequence: []
+            sequence: [ ]
         default: !input actionOff

@@ -65,7 +65,6 @@ trigger:
   - platform: state
     entity_id: !input motion_sensor
     id: motion
-    to: 'on'
   - platform: state
     entity_id: !input door_sensor
     id: door_opened

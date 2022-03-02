@@ -211,16 +211,16 @@ trigger:
     value_template: "{{ overrideActive4 and is_state(overrideEntity4, 'off') }}"
     id: override4
   - platform: time_pattern
-    minutes: '02'
+    minutes: '00'
     id: time
   - platform: time_pattern
-    minutes: '17'
+    minutes: '15'
     id: time
   - platform: time_pattern
-    minutes: '32'
+    minutes: '30'
     id: time
   - platform: time_pattern
-    minutes: '47'
+    minutes: '45'
     id: time
 
 variables:
