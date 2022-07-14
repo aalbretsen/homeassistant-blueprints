@@ -34,7 +34,7 @@ blueprint:
           min: 10
           max: 250
           step: 10
-          unit_of_measurement: ms
+          unit_of_measurement: 'ms'
     on_brightnes:
       name: Brightnes in % for ON button
       description: Optional brightness value to send when turning the strip on (0 = disabled).
@@ -44,7 +44,7 @@ blueprint:
           min: 0
           max: 100
           step: 1
-          unit_of_m easurement: %
+          unit_of_measurement: '%'
 
 mode: restart
 condition: [ ]
