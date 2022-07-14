@@ -35,6 +35,16 @@ blueprint:
           max: 250
           step: 10
           unit_of_measurement: ms
+    on_brightnes:
+      name: Brightnes in % for ON button
+      description: Optional brightness value to send when turning the strip on (0 = disabled).
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_m easurement: %
 
 mode: restart
 condition: [ ]
@@ -116,10 +126,11 @@ trigger:
 variables:
   deconz_button: !input deconz_button
   wled_light: !input wled_light
+  on_brightnes: !input on_brightnes
   dim_values:
     [ 1,2,3,4,5,6,7,8,9,10,12,14,16,18,20,22,24,26,28,30,34,38,42,46,50,54,58,62,66,70,78,86,94,100,108,116,124,130,144,160,176,192,208,224,240,250 ]
   brightness_value: |
-    {{ state_attr(wled_light, 'brightness') | int }}
+    {{ state_attr(wled_light, 'brightness') or 0 | int }}
   dim_values_up: |
     {{ dim_values | select("greaterthan", brightness_value) | list }}
   dim_values_down: |
@@ -133,6 +144,24 @@ action:
           - condition: template
             value_template: |
               {{ deconz_button != 'Right' }}
+          - condition: template
+            value_template: |
+              {{ on_brightnes > 0 }}
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: !input 'wled_light'
+            data:
+              brightness: !input 'on_brightnes'
+      - conditions:
+          - condition: trigger
+            id: turnOnLeft
+          - condition: template
+            value_template: |
+              {{ deconz_button != 'Right' }}
+          - condition: template
+            value_template: |
+              {{ on_brightnes == 0 }}
         sequence:
           - service: light.turn_on
             target:
@@ -144,6 +173,24 @@ action:
           - condition: template
             value_template: |
               {{ deconz_button == 'Right' }}
+          - condition: template
+            value_template: |
+              {{ on_brightnes > 0 }}
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: !input 'wled_light'
+            data:
+              brightness: !input 'on_brightnes'
+      - conditions:
+          - condition: trigger
+            id: turnOnRight
+          - condition: template
+            value_template: |
+              {{ deconz_button == 'Right' }}
+          - condition: template
+            value_template: |
+              {{ on_brightnes == 0 }}
         sequence:
           - service: light.turn_on
             target:
