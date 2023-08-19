@@ -1,0 +1,26 @@
+blueprint:
+  name: Light Control - Always off
+  domain: automation
+  description: >-
+    Keep light off when given binary value is activated (on)
+  input:
+    blocker:
+      name: Keep light off trigger
+      description: Keep light off when this binary value is activated (on).
+      selector:
+        entity: {}
+    delay:
+      name: Turn off light interval
+      description: Time in minutes between each time the off light action is triggered.
+      default: 15
+      selector:
+        number:
+          min: 5
+          max: 60
+          step: 5
+          unit_of_measurement: minutes
+    off_action:
+      name: Action for light OFF
+      description: Define the actions to be executed when it's time to turn the light off.
+      selector:
+        action: {}
