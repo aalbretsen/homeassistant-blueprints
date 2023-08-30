@@ -37,6 +37,7 @@ action:
       - conditions:
           - condition: sun
             after: sunrise
+          - condition: sun
             before: sunset
         sequence: !input light_off_action
     default: !input light_on_action
